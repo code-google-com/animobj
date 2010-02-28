@@ -1,0 +1,49 @@
+global proc AnimOBJMain_initialize()
+{
+    // The shelf we want to add the button to.
+    string $shelf = "AnimOBJ";
+
+    // The icon for the button.
+    // It was obtained from 'http://www.kde-look.org/content/show.php/Frugal+KDE+Icon+Theme?content=112028'.
+    string $iconImage = "icon.xpm";
+
+    // Tle button label.
+    string $iconBtnLabel0 = "Load animation OBJ files";
+
+    // Specify the shelf as the parent for our tool button.  If there
+    // is no such shelf, we create it.
+    //
+    string $btnParent;
+    if ( `shelfLayout -ex $shelf` )
+    {
+        $btnParent = $shelf;
+
+        // Check to see if the shelf already has the button.  If so,
+        // we want to delete it before we remake it so we don't end up with
+        // duplicate buttons on the shelf.
+
+        string $existingShelfButtons[] = `shelfLayout -q -ca $shelf`;
+        
+        for ( $btn in $existingShelfButtons )
+        {
+            if ( `shelfButton -q -l $btn` == $iconBtnLabel0 )
+                deleteUI $btn;
+        }
+    } else {
+        // Create the shelf under the global shelf parent.
+        global string $gShelfTopLevel;
+        $btnParent = `shelfLayout -p $gShelfTopLevel $shelf`;
+    }
+
+    // Make (or remake) the tool button.                
+    shelfButton -label $iconBtnLabel0 -image1 $iconImage
+                -command "AnimOBJ_LoadCommand" -p $btnParent;
+}
+
+
+
+
+
+
+
+
